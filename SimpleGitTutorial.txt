@@ -1,0 +1,11 @@
+Simple git tutorial
+
+git clone <url> - clones the git repository to your local machine so you can start working on it
+git pull - pulls any commits that other collaborators have pushed to the server
+git status - shows files that have been changed and not committed to the git repo
+git add <file/folder> - adds new files/changes to the repository
+git commit - Commits the changes to the repo, this can be undone but is difficult. It will prompt you to add a comment. Press Shift + I to Insert your comment. Be concise but descriptive, this is how we track what has been done to the files. When done commenting press ESC, then type :wq to save and exit the comment editor. The comment editor uses VI so all other VI related functions work. Pull before you commit to avoid merge conflicts.
+git push - push your commits to the git server. This can be undone but is VERY difficult. Be careful with what you push.
+git log - shows git commit history
+
+About filenames: please avoid using spaces and slashes in file names as they can be troublesome at times
