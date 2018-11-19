@@ -1,7 +1,8 @@
 #include "MoveRobot.h"
 #include <Servo.h>
+#include <zconf.h>
 
-//------------------------- Actions --------------------------------------//
+//------------------------------- Actions ------------------------------//
 // Change the Hex to match the controller actions (buttons etc..)
 #define LEFT_FWD 0xD6
 #define LEFT_NEUTRAL 0xD0
@@ -20,7 +21,7 @@
 #define AUTO_MINE 0xB2
 #define E_STOP 0xB1
 #define WHEEL_TOGGLE 0xD4
-//------------------------- Pins ----------------------------------------//
+//-------------------------------- Pins --------------------------------//
 //Motors
 #define LDRIVE_PIN 12
 #define RDRIVE_PIN 13
@@ -37,7 +38,7 @@
 #define A_up 0
 #define A_down 0
 
-//-------------------------MISC---------------------------------------
+//-------------------------------- MISC --------------------------------//
 // The numbers are based on servo angles 0'-180'. For our case, 90' is NEUTRAL. Some buffer is given on either side.
 #define POS 170 //FULL Forward
 #define NEUTRAL 92 //STOP on VICTOR this number may have to be calibrated...
@@ -52,13 +53,15 @@
 #define WHEEL_MOD_POS 110 // slower than 170
 #define WHEEL_MOD_NEG 70 // slower than 45
 
-//-----------------------Servos-----------------
+//------------------------------- Servos -------------------------------//
+//motor servos
 Servo Ldrive;
 Servo Rdrive;
 Servo Lact;
 Servo Ract;
 Servo Cbelt;
 
+//???
 int toggleFrameUp = 0;
 int toggleFrameDown = 0;
 int toggleAugOn = 0;
@@ -69,6 +72,147 @@ int toggleConveyerOn = 0;
 int toggleConveyerRev = 0;
 int toggleWheelSpeed = 0;
 
+/**
+ * Convert the range of power given to the motor
+ * from ( -90 : 90 ) to ( 0: 180 )
+ *
+ * The motors work between the range of ( 0: 180 ) where
+ * the values 0 - 89 make the robot go backwards
+ * the values 91 - 180 make the robot go forward.
+ *
+ * Changing the range helps conceptualize the direction
+ * that the robot is moving
+ * (negative = backwards, pos = forwards)
+ *
+ * @param p power to motor where -90 < p < 90
+ * @return power to motor where 0 < p < 180
+ */
+short MoveRobot::powerConvert(short p){
+    return p + (short)90;
+}
+
+/**
+ * Move the robot with a given power
+ * @param rPower power to right motor between -90 < rPower < 90
+ * @param lPower power to left motor between -90 < lPower < 90
+ */
+void MoveRobot::drive(short rPower, short lPower) {
+    Ldrive.write(powerConvert(lPower));
+    Rdrive.write(powerConvert(rPower));
+}
+
+/**
+ * Move the robot forward at given power
+ * @param power speed between -90 < power < 90
+ */
+void MoveRobot::move_powerForward(short power) {
+    drive(power,power);
+}
+
+/**
+ * Move the robot backwards at given power
+ * @param power speed between -90 < power < 90
+ */
+void MoveRobot::move_powerBack(short power) {
+    drive(-power,-power);
+}
+
+/**
+ * Turn the robot left at given power
+ * @param power speed between -90 < power < 90
+ */
+void MoveRobot::move_powerLeft(short power) {
+    drive(power,-power);
+}
+
+/**
+ * Turn the robot right at given power
+ * @param power speed between -90 < power < 90
+ */
+void MoveRobot::move_powerRight(short power) {
+    drive(-power, power);
+}
+
+/*
+** Stop the robot from moving
+void MoveRobot::stop() {
+    drive(0,0);
+}
+*/
+/**
+ * Move the robot for a given amount of time in milliseconds
+ *
+ * @param movement - how the robot will move (i.e. one of the move_ functions)
+ * @param power - the power the robot will move at
+ * @param milliseconds - the time the robot will move
+ */
+void MoveRobot::driveFor( void (MoveRobot::*movement)(short),
+        short power, unsigned int milliseconds ) {
+    (this->*movement)(power);
+    sleep(milliseconds);
+}
+
+/**
+ * Turn 90 degrees based on estimated time
+ *
+ * NOTE: NOT TESTED
+ *      Example implementation of driveFor
+ */
+void MoveRobot::turnLeft_90_Time() {
+   driveFor(&MoveRobot::move_powerLeft, WHEEL_MOD_NEG, 1000);
+}
+
+/*
+MoveRobot wheels = MoveRobot();
+void main() {
+
+    wheels.Forward(30);
+    sleep(1000);
+    wheels.stop();
+    sleep(1000);
+    wheels.right(90);
+    sleep(1000);
+    wheels.stop();
+}
+*/
+
+/** ??? */
+void MoveRobot::repeat() {
+
+}
+
+/** move both wheels in the same direction (forward)*/
+void MoveRobot::forward() {
+    Ldrive.write(WHEEL_MOD_NEG);
+    Rdrive.write(WHEEL_MOD_NEG);
+}
+
+/** move both wheels in the same direction (backward)*/
+void MoveRobot::back() {
+  Ldrive.write(WHEEL_MOD_POS);
+  Rdrive.write(WHEEL_MOD_POS);
+}
+
+/** move the left wheel backwards and the right wheel forward*/
+void MoveRobot::left() {
+  Ldrive.write(WHEEL_MOD_POS);
+  Rdrive.write(WHEEL_MOD_NEG);
+}
+
+/** move the left wheel forward and the right wheel backwards*/
+void MoveRobot::right() {
+  Ldrive.write(WHEEL_MOD_NEG);
+  Rdrive.write(WHEEL_MOD_POS);
+}
+
+/**s top the wheels from moving*/
+void MoveRobot::stop() {
+  Ldrive.write(NEUTRAL);
+  Rdrive.write(NEUTRAL);
+}
+
+// ==================== OLD CODE ==================== //
+//
 // /* function to move the left drive forward */
 // void leftForward() {
 //   if (digitalRead(LIMSWUP_PIN) == LOW) { // only allow the wheels to move if the auger is tripping the limit switches
@@ -283,32 +427,3 @@ int toggleWheelSpeed = 0;
 //   //Initialize RightBscrDir
 //   pinMode(LIMSWDN_PIN, INPUT_PULLUP);
 // }
-
-void MoveRobot::repeat() {
-
-}
-
-void MoveRobot::forward() {
-    Ldrive.write(WHEEL_MOD_NEG);
-    Rdrive.write(WHEEL_MOD_NEG);
-}
-
-void MoveRobot::back() {
-  Ldrive.write(WHEEL_MOD_POS);
-  Rdrive.write(WHEEL_MOD_POS);
-}
-
-void MoveRobot::left() {
-  Ldrive.write(WHEEL_MOD_POS);
-  Rdrive.write(WHEEL_MOD_NEG);
-}
-
-void MoveRobot::right() {
-  Ldrive.write(WHEEL_MOD_NEG);
-  Rdrive.write(WHEEL_MOD_POS);
-}
-
-void MoveRobot::stop() {
-  Ldrive.write(NEUTRAL);
-  Rdrive.write(NEUTRAL);
-}
