@@ -6,22 +6,23 @@
 
 class MoveRobot {
 public:
-  void start();
+  void start(short lPin, short rPin);
   void repeat();
-  void forward();
-  void back();
-  void left();
-  void right();
-  void stop();
 
-  short powerConvert(short p);
-  void drive(short rPower, short lPower);
-  void move_powerForward(short power);
-  void move_powerBack(short power);
-  void move_powerLeft(short power);
-  void move_powerRight(short power);
-  void driveFor(void (MoveRobot::*movement)(short), short power, unsigned int milliseconds);
-  void turnLeft_90_Time();
+  void leftPow (int lPower, int rPower, int timing);
+  void rightPow(int lPower, int rPower, int timing);
+
+  void forward(int power, int timing);
+  void back   (int power, int timing);
+  void left   (int power, int timing);
+  void right  (int power, int timing);
+
+  void forward(int power);
+  void back   (int power);
+  void left   (int power);
+  void right  (int power);
+  void stop   ();
+
 };
 
 
