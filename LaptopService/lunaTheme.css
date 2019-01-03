@@ -84,7 +84,7 @@ textarea {
 .fieldPicture{
     width: 100%;
     height: 90%;
-    background-image: url("NasaField.png");
+    background-image: url("img/NasaField.png");
     background-size: 100% 100%;
 
     background-repeat: no-repeat;
