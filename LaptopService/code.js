@@ -92,10 +92,3 @@ const sendCode = async () => {
     }
 
 }
-
-
-function startup() {
-    //setInterval(loadLidar,3000);
-    //setInterval(loadPixy,3000);
-}
-window.onload = startup;

@@ -9,6 +9,13 @@
     <link rel="stylesheet" type="text/css" href="lunaTheme.css">
 
     <script src="code.js"/>
+    <script>
+        function startup() {
+            setInterval(loadLidar,3000);
+            setInterval(loadPixy,3000);
+        }
+        window.onload = startup;
+    </script>
 </head>
 
 <body style="overflow: hidden;">
