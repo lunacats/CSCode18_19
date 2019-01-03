@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link rel="icon" href="lunacatsImg.png">
+
+    <meta charset="UTF-8">
+    <title>Lunacats</title>
+    <link rel="stylesheet" type="text/css" href="lunaTheme.css">
+
+    <script>
+        const forward = async () => {
+            const response = await fetch("http://172.16.50.154:5000/cmd/{'c':0,p:30}");
+            const myJson = await response.json(); //extract JSON from the http response
+            // do something with myJson
+        }
+        const back = async () => {
+            const response = await fetch("http://172.16.50.154:5000/cmd/{'c':1,p:30}");
+            const myJson = await response.json(); //extract JSON from the http response
+            // do something with myJson
+        }
+        const left = async () => {
+            const response = await fetch("http://172.16.50.154:5000/cmd/{'c':2,p:30}");
+            const myJson = await response.json(); //extract JSON from the http response
+            // do something with myJson
+        }
+        const right = async () => {
+            const response = await fetch("http://172.16.50.154:5000/cmd/{'c':3,p:30}");
+            const myJson = await response.json(); //extract JSON from the http response
+            // do something with myJson
+        }
+        const stop = async () => {
+            const response = await fetch("http://172.16.50.154:5000/cmd/{'c':4}");
+            const myJson = await response.json(); //extract JSON from the http response
+            // do something with myJson
+        }
+
+        const loadPixy = async () => {
+
+            const response = await fetch("http://172.16.50.154:5000/cmd/{'c':5}");
+            const myJson = await response.json(); //extract JSON from the http response
+
+            const count = myJson["C"];
+
+
+            const pixyView = document.getElementById('pixyViewBox');
+
+            pixyView.innerHTML = '';
+
+            for(i = 0; i < count; i++) {
+                const width  = myJson["W"+i]/320;
+                const height = myJson["H"+i]/200;
+
+                const x = myJson["X"+i]/320 - width/2;
+                const y = myJson["Y"+i]/200 - height/2;
+
+
+
+
+                const box = document.createElement("DIV");
+                box.setAttribute("class","pixyImg");
+
+                // <div id = "sig 1" class="pixyImg" style="width: 50px; height: 50px;"></div>
+                box.setAttribute("style",
+                    "width: "+width*100+"%;" +
+                    " height: "+height*100+"%;" +
+                    " left:"+x*100+"%;" +
+                    " top:"+y*100+"%;");
+
+                box.innerHTML = myJson["S"+i];
+
+                pixyView.appendChild(box);
+            }
+
+
+
+        }
+
+
+
+
+        function startup() {
+
+
+            setInterval(loadPixy,500);
+
+        }
+        window.onload = startup;
+    </script>
+</head>
+
+<body style="overflow: hidden;">
+
+<div id = "feedbackBox">
+    <div id = "map">
+        <header> Map View </header>
+        <div class="fieldPicture"></div>
+    </div>
+    <div id = "pixyView">
+        <header> Pixy View </header>
+        <div width="100%" height="90%" id="pixyViewBox">
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="codeBox">
+    <div class = "btn-group">
+        <button onclick="stop()">Test Code</button>
+        <button onclick="stop()">Save Code</button>
+        <button onclick="stop()">Stop Code</button>
+    </div>
+
+    <textarea class="codeText"></textarea>
+
+</div>
+
+<table id="controlAugur" align="center">
+    <tr>
+        <td></td>
+        <td align="center"><button type="button" onclick="stop()" class="sendJson">Raise</button></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td align="center"><button type="button" onclick="stop()" class="sendJson">Lower</button></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td align="center"><button type="button" onclick="stop()" class="sendJson">Drill</button></td>
+        <td></td>
+    </tr>
+</table>
+
+<table id="moveButtons" align="center">
+    <tr>
+        <td></td>
+        <td align="center"><button type="button" onclick="forward()" class="sendJson">Forward</button></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td align="center"><button type="button" onclick="left()" class="sendJson">Left</button></td>
+        <td align="center"><button type="button" onclick="stop()" class="sendJson">Stop</button></td>
+        <td align="center"><button type="button" onclick="right()"class="sendJson">Right</button></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td align="center"><button type="button" onclick="back()" class="sendJson">Back</button></td>
+        <td></td>
+    </tr>
+</table>
+
+<table id="autoButtons" align="center">
+    <tr>
+        <td></td>
+        <td align="center"><button type="button" onclick="stop()" class="sendJsonBlue">Start Auto</button></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td align="center"><button type="button" onclick="stop()" class="sendJsonRed">Stop Auto</button></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td align="center"><button type="button" onclick="stop()" class="sendJsonRed">Stop All</button></td>
+        <td></td>
+    </tr>
+</table>
+
+
+
+
+</body>
+</html>
