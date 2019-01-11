@@ -96,13 +96,13 @@ textarea {
 .sidenavBar {
     position:absolute;
     height: 100%;
-    width:10px;
+    width:1%;
     background-color: #222222;
 }
 .sidenav {
     position:absolute;
     height: 100%;
-    width:190px;
+    width:14%;
     margin-left: 10px;
     background-image: linear-gradient(90deg, #222222, #333333);
     background-repeat: no-repeat;
@@ -234,6 +234,8 @@ header{
     background-position: center;
     background-color: #333333;
 }
-#mainFrame {
-
+#frame {
+    width: 90%;
+    height: 90%;
+    padding: 5%;
 }
