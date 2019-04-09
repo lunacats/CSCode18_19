@@ -1,7 +1,7 @@
 #include <ArduinoJson.h>
 #include <MoveRobot.h>
-//#include <Wire.h>
-//#include <SparkFun_VL6180X.h>
+#include <Wire.h>
+#include <LIDARLite.h>
 
 #define FORWARD 0
 #define BACK 1
@@ -16,8 +16,8 @@
 String buff;
 MoveRobot robot;
 
-//VL6180xIdentification identification;
-//VL6180x lidar(VL6180X_ADDRESS);
+LIDARLite lidarLite;
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -25,18 +25,10 @@ void setup() {
   Serial.setTimeout(50);
   robot.start(10,11);
 
-//  Wire.begin(); //Start I2C library
-//  delay(100); // delay .1s
-//  
-//  lidar.getIdentification(&identification); // Retrieve manufacture info from device memory
-//
-//  if(lidar.VL6180xInit() != 0){
-//    Serial.println("FAILED TO INITALIZE"); //Initialize device and check for errors
-//  }; 
-//  
-//  lidar.VL6180xDefautSettings(); //Load default settings to get started.
-//  
-//  delay(1000); // delay 1s
+  //setup Lidar
+  lidarLite.begin(0, true); // Set configuration to default and I2C to 400 kHz
+  lidarLite.configure(0); // Change this number to try out alternate configurations
+  
 }
 
 
@@ -52,6 +44,10 @@ enum DriveCommand {
 DriveCommand lastCommand = stop;
 
 
+int getLidarCm(){
+  return lidarLite.distance(false);
+}
+
 
 void parseCommand() {
 
@@ -65,26 +61,12 @@ void parseCommand() {
   }
   
   if(root["c"] == 6) {
-//    Serial.println("{\"L\":" + String(getLidarInches()) + "}");
-    Serial.println("{\"L\":9999}");
+  Serial.println("{\"L\":" + String(getLidarCm()) + "}");
   }
   else {
     executeMotorCommand(root);
   }
 }
-
-//gets the distance the lidar detects in inches
-//float getLidarInches(){
-//  float distance = lidar.getDistance();
-//  if( distance < 255 ) {
-//    return distance * 0.03937;
-//  }
-//  else {
-//    return 9999;
-//  }
-//  
-//}
-
 
 void executeMotorCommand(JsonObject& root) {
   int cmd = root["c"];
@@ -149,10 +131,5 @@ void loop() {
     buff = Serial.readString();
     parseCommand();
   }
-  
-//  if(getLidarInches() < 6 && lastCommand == FORWARD) {
-//    robot.stop();
-//    lastCommand = stop;
-//  }
   
 }
