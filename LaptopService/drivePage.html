@@ -23,10 +23,10 @@
 <div id = "feedbackBox">
     <div id = "map">
         <header> Lidar </header>
-        <div class="fieldPicture"></div>
         <p style="margin: 0; color: black;"> Lidar Distance</p>
-        <progress value="0" max="7" id="lidarDistance" style="width: 100%;">
-        </progress>
+        <progress value="0" max="7" id="lidarDistance" style="width: 100%;"> </progress>
+
+
     </div>
     <div id = "pixyView">
         <header> Pixy View </header>
@@ -37,17 +37,6 @@
 
 </div>
 
-
-<div class="codeBox">
-    <div class = "btn-group">
-        <button onclick="stop()">Test Code</button>
-        <button onclick="stop()">Save Code</button>
-        <button onclick="stop()">Stop Code</button>
-    </div>
-
-    <textarea class="codeText"></textarea>
-
-</div>
 
 <table id="controlAugur" align="center">
     <tr>
@@ -89,17 +78,12 @@
 <table id="autoButtons" align="center">
     <tr>
         <td></td>
-        <td align="center"><button type="button" onclick="stop()" class="sendJsonBlue">Start Auto</button></td>
+        <td align="center"><button type="button" onclick="startAuto()" class="sendJsonBlue">Start Auto</button></td>
         <td></td>
     </tr>
     <tr>
         <td></td>
-        <td align="center"><button type="button" onclick="stop()" class="sendJsonRed">Stop Auto</button></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td align="center"><button type="button" onclick="stop()" class="sendJsonRed">Stop All</button></td>
+        <td align="center"><button type="button" onclick="stopAuto()" class="sendJsonRed">Stop Auto</button></td>
         <td></td>
     </tr>
 </table>
