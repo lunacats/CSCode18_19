@@ -62,10 +62,10 @@ const stop = async () => {
 }
 
 const startAuto = async () => {
-    const myJson = await sendDriveCommand(startAutoCmd)
+    const myJson = await sendCmd(startAutoCmd)
 }
 const stopAuto = async () => {
-    const myJson = await sendDriveCommand(stopAutoCmd)
+    const myJson = await sendCmd(stopAutoCmd)
 }
 
 
