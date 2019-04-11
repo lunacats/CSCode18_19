@@ -12,14 +12,14 @@ const startAutoCmd    = 7;
 const stopAutoCmd     = 8;
 
 //Ip address that the program connects to
-const ip = "http://10.0.10.12:5000"
+const ip = "http://10.0.10.10:5000"
 
 //Standard power assigned to each motor
 const buttonPower = -10;
 
 //This creates the json string for a drive command with a given ammount of power
 function createDriveCommandWithPower (cmd, power) {
-  return ip+"/cmd/{'c':"+cmd+",p:"+power+"}";
+  return ip+"/cmd/{'c':"+cmd+",'p':"+power+"}";
 }
 //This creates the json string for a drive command with a standard ammount of power
 function createDriveCommand (cmd) {
@@ -27,12 +27,11 @@ function createDriveCommand (cmd) {
 }
 
 //This sends the json to the raspberry pi and gets a response
-function sendJson(json){
+async function sendJson(json){
   console.log("Sent:\t"+json);
-  const response = "In Development"//fetch(createDriveCommand(0));
-
+  const response = fetch(json, {mode: 'cors'});
   console.log("Got:\t"+response);
-  // return response.json();
+  return response;
 }
 
 //This sends a drive command with a standard ammount of power to the robot
@@ -41,7 +40,7 @@ function sendDriveCommand (cmd) {
 }
 //This sends a json string with just a cmd specified to the robot
 function sendCmd(cmd) {
-  return sendJson("/cmd/{'c':"+cmd+"}")
+  return sendJson(ip+"/cmd/{'c':"+cmd+"}");
 }
 
 //These are used by the buttons in drivePage.html
@@ -73,13 +72,14 @@ const stopAuto = async () => {
 
 
 //This sets up the pixy view
-const loadPixy = async () => {
+setInterval( loadPixy = async () => {
 
     const response = await sendCmd(getPixyInfoCmd);
-    const myJson = await response.json(); //extract JSON from the http response
 
+    const myJson = response.json(); //extract JSON from the http response
+
+    console.log("Got:"+myJson);
     const count = myJson["C"];
-
 
     const pixyView = document.getElementById('pixyViewBox');
 
@@ -95,6 +95,7 @@ const loadPixy = async () => {
         const box = document.createElement("DIV");
         box.setAttribute("class","pixyImg");
 
+
         // <div id = "sig 1" class="pixyImg" style="width: 50px; height: 50px;"></div>
         box.setAttribute("style",
             "width: "+width*100+"%;" +
@@ -107,8 +108,8 @@ const loadPixy = async () => {
         pixyView.appendChild(box);
     }
 
-}
 
+},5000);
 //This gets the lidar distance from the robot
 const loadLidar = async () => {
     const response = await sendCmd(getLidarInfoCmd);
