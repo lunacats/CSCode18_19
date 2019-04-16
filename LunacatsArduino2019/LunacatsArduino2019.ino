@@ -2,7 +2,6 @@
 #include <MoveRobot.h>
 #include <Wire.h>
 #include <LIDARLite.h>
-#include <Stepper.h>
 
 #define FORWARD 0
 #define BACK 1
@@ -21,7 +20,40 @@ MoveRobot robot;
 
 LIDARLite lidarLite;
 
-Stepper stepper(STEPS, 8, 10, 9, 11);
+const int stepPin = 8; 
+const int dirPin = 9; 
+
+/*
+ * const int stepPin = 3; 
+const int dirPin = 4; 
+ 
+void setup() {
+  // Sets the two pins as Outputs
+  pinMode(stepPin,OUTPUT); 
+  pinMode(dirPin,OUTPUT);
+}
+void loop() {
+  digitalWrite(dirPin,HIGH); // Enables the motor to move in a particular direction
+  // Makes 200 pulses for making one full cycle rotation
+  for(int x = 0; x < 200; x++) {
+    digitalWrite(stepPin,HIGH); 
+    delayMicroseconds(500); 
+    digitalWrite(stepPin,LOW); 
+    delayMicroseconds(500); 
+  }
+  delay(1000); // One second delay
+  
+  digitalWrite(dirPin,LOW); //Changes the rotations direction
+  // Makes 400 pulses for making two full cycle rotation
+  for(int x = 0; x < 400; x++) {
+    digitalWrite(stepPin,HIGH);
+    delayMicroseconds(500);
+    digitalWrite(stepPin,LOW);
+    delayMicroseconds(500);
+  }
+  delay(1000);
+}
+ */
 
 void setup() {
   // put your setup code here, to run once:
@@ -34,7 +66,8 @@ void setup() {
   lidarLite.configure(0); // Change this number to try out alternate configurations
 
   //setup stepper motor
-  stepper.setSpeed(200);
+  pinMode(stepPin,OUTPUT); 
+  pinMode(dirPin,OUTPUT);
   
 }
 
@@ -77,8 +110,8 @@ void parseCommand() {
 }
 
 void rotateStepperMotor() {
-  stepper.step(90);
-  Serial.println("Moving 90 steps");
+//  stepper.step(1);
+  Serial.println("Moving 1 step");
 }
 
 void executeMotorCommand(JsonObject& root) {
@@ -144,5 +177,25 @@ void loop() {
     buff = Serial.readString();
     parseCommand();
   }
+
+  digitalWrite(dirPin,HIGH); // Enables the motor to move in a particular direction
+  // Makes 200 pulses for making one full cycle rotation
+  for(int x = 0; x < 200; x++) {
+    digitalWrite(stepPin,HIGH); 
+    delayMicroseconds(500); 
+    digitalWrite(stepPin,LOW); 
+    delayMicroseconds(500); 
+  }
+  delay(1000); // One second delay
+  
+  digitalWrite(dirPin,LOW); //Changes the rotations direction
+  // Makes 400 pulses for making two full cycle rotation
+  for(int x = 0; x < 400; x++) {
+    digitalWrite(stepPin,HIGH);
+    delayMicroseconds(500);
+    digitalWrite(stepPin,LOW);
+    delayMicroseconds(500);
+  }
+  delay(1000);
   
 }
