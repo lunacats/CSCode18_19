@@ -2,6 +2,7 @@
 #include <MoveRobot.h>
 #include <Wire.h>
 #include <LIDARLite.h>
+#include <Stepper.h>
 
 #define FORWARD 0
 #define BACK 1
@@ -13,25 +14,29 @@
 
 #define VL6180X_ADDRESS 0x29
 
+#define STEPS 200
+
 String buff;
 MoveRobot robot;
 
 LIDARLite lidarLite;
 
+Stepper stepper(STEPS, 8, 10, 9, 11);
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(2000000);
   Serial.setTimeout(50);
   robot.start(10,11);
-
+  
   //setup Lidar
   lidarLite.begin(0, true); // Set configuration to default and I2C to 400 kHz
   lidarLite.configure(0); // Change this number to try out alternate configurations
+
+  //setup stepper motor
+  stepper.setSpeed(200);
   
 }
-
-
 
 enum DriveCommand {
   forward = FORWARD,
@@ -43,11 +48,11 @@ enum DriveCommand {
 
 DriveCommand lastCommand = stop;
 
-
 int getLidarCm(){
   return lidarLite.distance(false);
 }
-
+//Recieve a new command through the arduino {c:9}
+//ZZ
 
 void parseCommand() {
 
@@ -59,13 +64,21 @@ void parseCommand() {
     Serial.println("{'error':'Bad Command', 'cmd':'"+buff+"'}");
     return;
   }
-  
-  if(root["c"] == 6) {
+
+  if(root["c"] == 9) {
+    rotateStepperMotor();
+  }
+  else if(root["c"] == 6) {
   Serial.println("{\"L\":" + String(getLidarCm()) + "}");
   }
   else {
     executeMotorCommand(root);
   }
+}
+
+void rotateStepperMotor() {
+  stepper.step(90);
+  Serial.println("Moving 90 steps");
 }
 
 void executeMotorCommand(JsonObject& root) {
